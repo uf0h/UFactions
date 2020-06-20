@@ -6,6 +6,7 @@ import java.util.Map;
 
 import lombok.Getter;
 import me.ufo.factions.UFactionsPlugin;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -13,9 +14,9 @@ import org.bukkit.command.CommandSender;
  TODO: override methods
  TODO: description, aliases, permissions
 */
-public abstract class BaseCommand extends Command {
-
+public abstract class BaseCommand extends Command implements IBaseCommand {
   @Getter private UFactionsPlugin plugin;
+
   private Map<String, BaseCommand> subCommands;
 
   protected BaseCommand(UFactionsPlugin plugin, String label) {
@@ -30,33 +31,46 @@ public abstract class BaseCommand extends Command {
     this.setup();
   }
 
-  public BaseCommand(BaseCommand parent, String label) {
+  protected BaseCommand(BaseCommand parent, String label) {
     this(parent, label, new String[0]);
   }
 
-  public BaseCommand(BaseCommand parent, String label, String... aliases) {
+  protected BaseCommand(BaseCommand parent, String label, String... aliases) {
     super(label, "", "", Arrays.asList(aliases));
+    super.setAliases(Arrays.asList(aliases));
 
     parent.addSubCommand(label, this);
-    setAliases(Arrays.asList(aliases));
-
     this.setup();
   }
 
-  public abstract void setup();
-
-  public abstract boolean execute(CommandSender sender, String label, String[] args);
+  @Override
+  public boolean execute(CommandSender sender, String label, String[] args) {
+    sender.sendMessage("base command");
+    final BaseCommand command = this.getSubCommand(args[0]);
+    if (command != null) {
+      // execute command
+      return command.execute(
+          sender,
+          label,
+          // remove subcommand argument
+          ArrayUtils.remove(args, 0));
+    } else {
+      this.subCommands.get("help").execute(sender, label, args);
+    }
+    return true;
+  }
 
   private void addSubCommand(String label, BaseCommand command) {
     this.subCommands.put(label, command);
   }
 
-  BaseCommand getSubCommand(String label) {
-    return subCommands.get(label);
+  protected BaseCommand getSubCommand(String label) {
+    return this.subCommands.get(label);
   }
 
-  // debug
-  String getSubCommands() {
-    return subCommands.toString();
+  @Override
+  public void setPermission(String permission) {
+    super.setPermission("factions." + permission);
   }
+
 }

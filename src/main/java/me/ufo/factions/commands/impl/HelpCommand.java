@@ -13,16 +13,15 @@ public final class HelpCommand extends BaseCommand {
 
   @Override
   public void setup() {
-    setPermission("factions.help");
+    setPermission("help");
   }
 
   @Override
   public boolean execute(CommandSender sender, String label, String[] args) {
-
     sender.sendMessage("Help command");
     sender.sendMessage("label: " + label);
     sender.sendMessage("args: " + Arrays.toString(args));
-
-    return false;
+    return true;
   }
+
 }

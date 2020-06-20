@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 import lombok.Getter;
 import me.ufo.factions.commands.BaseCommand;
-import me.ufo.factions.commands.FCommand;
+import me.ufo.factions.commands.impl.FCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,4 +37,5 @@ public final class UFactionsPlugin extends JavaPlugin {
       this.getServer().getPluginManager().disablePlugin(this);
     }
   }
+
 }

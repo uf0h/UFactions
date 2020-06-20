@@ -13,7 +13,7 @@ public final class ClaimCommand extends BaseCommand {
 
   @Override
   public void setup() {
-    setPermission("factions.claim");
+    setPermission("claim");
   }
 
   @Override
@@ -21,8 +21,7 @@ public final class ClaimCommand extends BaseCommand {
     sender.sendMessage("claims command");
     sender.sendMessage("label: " + label);
     sender.sendMessage("args: " + Arrays.toString(args));
-
-
-    return false;
+    return true;
   }
+
 }
